@@ -33,6 +33,7 @@ class BleData {
   var battery = "0".obs;
   var myBpResponse = Rxn();
   var myBatteryResponse = Rxn();
+  var temperatureData = Rxn();
 
 
   //bluetooth
@@ -267,9 +268,11 @@ class BleData {
     sdk.getTemperature().then((Hc03BaseMeasurementData data) {
       if (data is TemperatureData) {
         temperature.value = data.temperature;
+        temperatureData.value = data;
       }
     }).catchError((error) {
       if (error is AppException) {
+        temperatureData.value = error;
         debugPrint("getTemperature exception=${error.message}");
       }
     });
