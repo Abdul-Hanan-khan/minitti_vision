@@ -1,4 +1,6 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
 
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -27,24 +29,48 @@ class _EcgWaveState extends State<EcgWave> {
     super.dispose();
   }
 
+// Future _getLPPerMm(BuildContext context)async {
+
+//    final width = MediaQuery.of(context).size.width;
+//    final height = MediaQuery.of(context).size.height;
+//    final diagonal = sqrt(width*width+height*height);
+//    final screenSizeInches =await DeviceExtInfo.screenSizeInches;
+//    return diagonal/screenSizeInches/25.4;
+
+//    }
+
   @override
   Widget build(BuildContext context) {
+    double dpi = MediaQuery.of(context).devicePixelRatio;
+    Size size = MediaQuery.of(context).size;
+    double with1 = size.width;
+    double height1 = size.height;
+    double with2 = size.width * dpi;
+    double height2 = size.height * dpi;
+    double qrt = sqrt(with1 * with1 + height1 * height1);
+    double qrt1 = sqrt(with2 * with2 + height2 * height2);
+    double sz = qrt1 / qrt;
+    double mm = dpi * 160 / 25.4 / 10;
 
+    debugPrint(
+        " dpi=$dpi with1=$with1 height1=$height1 qrt=$qrt  qrt1=$qrt1  sz=$sz");
     int height = 101;
-    int width = 240;
+    int width = 451;
+
+    final px = 1 / (dpi * 25.4) * 100;
+    debugPrint("px=$px");
     return SizedBox(
       height: 130,
       child: Stack(
         children: [
           CustomPaint(
-              foregroundPainter: LinePainter(widget.wave),
-              painter:GridPainter(1.24, height, width)),
-              // painter: LinePainter(widget.wave)),
+              foregroundPainter: GridPainter(1.24, height, width),
+              painter: LinePainter(widget.wave)),
           Obx(() => Text(
-                "${widget.update}",
-                style: const TextStyle(
-                    fontSize: 5, color: Color.fromARGB(1, 255, 254, 254)),
-              ))
+            "${widget.update}",
+            style: const TextStyle(
+                fontSize: 5, color: Color.fromARGB(1, 255, 254, 254)),
+          ))
         ],
       ),
     );
@@ -123,7 +149,7 @@ class LinePainter extends CustomPainter {
     }
     final paint = Paint()
       ..color = Colors.red
-      ..strokeWidth = 2
+      ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
     Path path = Path();
     speedX = getSpeed();
@@ -134,12 +160,6 @@ class LinePainter extends CustomPainter {
   }
 
   double getY(data) {
-    if(data >7000){
-      data = 7000;
-    }
-    if(data<-7000){
-      data = -7000;
-    }
     int height = 127;
     if (xs == 0) {
       xs = getxS();

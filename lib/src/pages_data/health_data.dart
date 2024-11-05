@@ -287,6 +287,9 @@ class BleData {
     hrv.value = 0;
     maxRR.value = 0;
     minRR.value = 0;
+    hrv.value = 0;
+    waveData.clear();
+    respiratoryRateV.value = 0;
     startDetect(Detection.ECG);
   }
 

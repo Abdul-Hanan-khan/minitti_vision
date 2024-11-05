@@ -149,8 +149,8 @@ class BodyTemperatureScreen extends StatelessWidget {
                             style: TextStyle(fontSize: 40, color: Colors.black,fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            "mmHa",
-                            style: TextStyle(fontSize: 15, color: Colors.grey),
+                            "°C",
+                            style: TextStyle(fontSize: 30, color: Colors.grey),
                           ),
                         ],
                       ),

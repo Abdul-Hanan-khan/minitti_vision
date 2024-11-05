@@ -450,8 +450,8 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   homeController.bleData.stopEcg();
                 }),
-            EcgWave(homeController.bleData.waveData,
-                homeController.bleData.ecgUpdate),
+            // EcgWave(homeController.bleData.waveData,
+            //     homeController.bleData.ecgUpdate),
           ],
         ),
       ),
@@ -503,6 +503,10 @@ class _HomePageState extends State<HomePage> {
                                           connectivity.scanDes.value =
                                               "Disconnect";
                                           await Future.delayed(
+                                              Duration(seconds: 0));
+                                          // homeController.bleData.startBattery();
+                                          homeController.checkAndMonitorBattery();
+                                          await Future.delayed(
                                               Duration(seconds: 1), () async {
 
                                             Fluttertoast.showToast(
@@ -520,10 +524,7 @@ class _HomePageState extends State<HomePage> {
                                             //         duration: Duration(seconds: 2)));
 
 
-                                            await Future.delayed(
-                                                Duration(seconds: 0));
-                                            // homeController.bleData.startBattery();
-                                            homeController.checkAndMonitorBattery();
+
                                             if (await Vibration.hasVibrator() ?? false) {
                                               Vibration.vibrate(duration: 500); // Vibrate for 0.5s on button press
                                             }
