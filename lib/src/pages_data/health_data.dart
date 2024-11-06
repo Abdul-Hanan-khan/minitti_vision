@@ -34,6 +34,10 @@ class BleData {
   var myBpResponse = Rxn();
   var myBatteryResponse = Rxn();
   var temperatureData = Rxn();
+  var measuringEcg = false.obs;
+  var ecgSeconds = 0.obs;  // Observable to track seconds
+  var ecgMinutes = 0.obs;
+   Timer? _ecgTimer;
 
 
   //bluetooth
@@ -77,6 +81,7 @@ class BleData {
           case "Mood Index":
             if (hrv.value != 0) {
               stopEcg();
+
             }
             mood.value = message["value"];
             break;
@@ -108,10 +113,12 @@ class BleData {
             }
             break;
         }
-        outEcgValue.value =
-            "hr=$hr hrv=$hrv  mood=$mood  respiratoryRate=$respiratoryRateV minRR=$minRR maxRR=$maxRR";
+        outEcgValue.value = "hr=$hr hrv=$hrv  mood=$mood  respiratoryRate=$respiratoryRateV minRR=$minRR maxRR=$maxRR";
+
       }
     });
+
+
 
     /// get blood oxygen data
     final stream = await sdk.getBloodOxygen();
@@ -282,21 +289,48 @@ class BleData {
     stopDetect(Detection.BT);
   }
 
-  void startEcg() async {
+  void clearEcgReadings(){
     mood.value = 0;
     hrv.value = 0;
     maxRR.value = 0;
     minRR.value = 0;
     hrv.value = 0;
-    waveData.clear();
     respiratoryRateV.value = 0;
+    ecgMinutes.value=0;
+    ecgSeconds.value=0;
+    waveData.clear();
+
+
+  }
+
+  void startEcg() async {
+    clearEcgReadings();
+    startTimerEcg();
     startDetect(Detection.ECG);
   }
 
   void stopEcg() async {
+    stopTimerEcg();
     stopDetect(Detection.ECG);
+    measuringEcg.value = false;
   }
 
+  startTimerEcg(){
+    _ecgTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      ecgSeconds++;
+      if (ecgSeconds.value >= 60) {
+        ecgMinutes++;
+        ecgSeconds.value = 0; // Reset seconds to 0 after a minute
+      }
+    });
+  }
+
+  stopTimerEcg(){
+    if(_ecgTimer != null){
+      _ecgTimer!.cancel();
+
+    }
+  }
   void showToast(String content) {
     Fluttertoast.showToast(
       msg: content,

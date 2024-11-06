@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:test_flutter/src/pages_data/health_data.dart';
 
 class EcgController extends GetxController {
-  RxBool measuringEcg = false.obs;
+  // RxBool measuringEcg = false.obs;
   late BleData bleData;
 
   @override
@@ -13,12 +13,12 @@ class EcgController extends GetxController {
   }
 
   startEcg() {
-    measuringEcg.value = true;
+    bleData.measuringEcg.value = true;
     bleData.startEcg();
   }
 
   stopEcg() {
-    measuringEcg.value = false;
+    bleData.measuringEcg.value = false;
     bleData.stopEcg();
   }
 

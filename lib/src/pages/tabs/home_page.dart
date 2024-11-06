@@ -65,9 +65,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
-    if(connectivity.scanDes.value == "Disconnect"){
-      homeController.checkAndMonitorBattery();
-    }
+    // if(connectivity.scanDes.value == "Disconnect"){
+    //   homeController.checkAndMonitorBattery();
+    // }
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Obx(() => connectivity.scanDes.value == "Disconnect"
-                      ? ExternalDeviceBatteryWidget(
+                      ?homeController.batteryLevel.value ==0?Container(): ExternalDeviceBatteryWidget(
                           isCharging: homeController.isBatteryCharging.value,
                           batteryLevel: homeController.batteryLevel.value)
                       : Container()),
@@ -101,6 +101,7 @@ class _HomePageState extends State<HomePage> {
                           } else if (connectivity.scanDes.value ==
                               "Disconnect") {
                             connectivity.blueToothManager.disConnect();
+                            homeController.stopBatteryMonitor();
                             // connectivity.blueToothManager.stopScan();
                             connectivity.scanDes.value = "Connect";
                             connectivity.isScan.value = false;
@@ -503,11 +504,11 @@ class _HomePageState extends State<HomePage> {
                                           connectivity.scanDes.value =
                                               "Disconnect";
                                           await Future.delayed(
-                                              Duration(seconds: 0));
+                                              Duration(seconds: 2));
                                           // homeController.bleData.startBattery();
                                           homeController.checkAndMonitorBattery();
                                           await Future.delayed(
-                                              Duration(seconds: 1), () async {
+                                              Duration(seconds: 0), () async {
 
                                             Fluttertoast.showToast(
                                                 msg: "Connected To Device",

@@ -17,6 +17,9 @@ class EcgScreen extends StatelessWidget {
       child: WillPopScope(
         onWillPop: () async {
           homeController.monitorBattery();
+          controller.stopEcg();
+          controller.bleData.clearEcgReadings();
+
           return true;
         },
         child: Scaffold(
@@ -42,6 +45,8 @@ class EcgScreen extends StatelessWidget {
         GestureDetector(
             onTap: () {
               homeController.monitorBattery();
+              controller.stopEcg();
+              controller.bleData.clearEcgReadings();
               Get.back();
             },
             child: Icon(Icons.arrow_back_ios)),
@@ -55,10 +60,12 @@ class EcgScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 20,),
+        SizedBox(
+          height: 20,
+        ),
         SizedBox(
             height: 200,
-            width: 10,
+            // width: 10,
             child: EcgWave(homeController.bleData.waveData,
                 homeController.bleData.ecgUpdate)),
 
@@ -121,7 +128,7 @@ class EcgScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 margin: EdgeInsetsDirectional.only(top: 10),
-                padding: EdgeInsetsDirectional.all( 10),
+                padding: EdgeInsetsDirectional.all(10),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7),
                     color: Colors.white,
@@ -132,38 +139,58 @@ class EcgScreen extends StatelessWidget {
                           blurRadius: 2,
                           offset: Offset(0, 3))
                     ]),
-                child:
-                Column(children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ecgResultItem(title: "RRI Maximum:", value: controller.bleData.maxRR,unit: "ms"),
-                      ecgResultItem(title: "RRI Minimum:", value: controller.bleData.minRR,unit: "ms")
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ecgResultItem(title: "Heart Rate:", value: controller.bleData.hr,unit: "BPM"),
-                      ecgResultItem(title: "Hrv:", value: controller.bleData.hrv,unit: "ms")
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ecgResultItem(title: "Respiratory Rate:", value: controller.bleData.respiratoryRateV,unit: "BPM"),
-                      ecgResultItem(title: "Hrv:", value: controller.bleData.hrv,unit: "ms")
-                    ],
-                  ),
-                ],),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ecgResultItem(
+                            title: "RRI Maximum:",
+                            value: controller.bleData.maxRR,
+                            unit: "ms"),
+                        ecgResultItem(
+                            title: "RRI Minimum:",
+                            value: controller.bleData.minRR,
+                            unit: "ms")
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ecgResultItem(
+                            title: "Heart Rate:",
+                            value: controller.bleData.hr,
+                            unit: "BPM"),
+                        ecgResultItem(
+                            title: "Hrv:",
+                            value: controller.bleData.hrv,
+                            unit: "ms")
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ecgResultItem(
+                            title: "Respiratory Rate:",
+                            value: controller.bleData.respiratoryRateV,
+                            unit: "BPM"),
+                        timerWidget()
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -178,7 +205,7 @@ class EcgScreen extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 // controller.loadingBO.value = !controller.loadingBO.value;
-                if (!controller.measuringEcg.value) {
+                if (!controller.bleData.measuringEcg.value) {
                   controller.startEcg();
                 } else {
                   controller.stopEcg();
@@ -190,13 +217,15 @@ class EcgScreen extends StatelessWidget {
                   curve: Curves.easeInOut,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
-                    color: controller.measuringEcg.value
+                    color: controller.bleData.measuringEcg.value
                         ? Colors.red
                         : Colors.blue,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    controller.measuringEcg.value ? "Stop ECG" : 'Start ECG',
+                    controller.bleData.measuringEcg.value
+                        ? "Stop ECG"
+                        : 'Start ECG',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -208,20 +237,48 @@ class EcgScreen extends StatelessWidget {
     );
   }
 
-  Widget ecgResultItem({required String title, required RxInt value,required String unit}) {
+  Widget ecgResultItem(
+      {required String title,
+      required RxInt value,
+      required String unit,
+      bool? isTimer}) {
     return Obx(() => Row(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(title),
-            SizedBox(width: 2,),
-            Text(value.value.toString(),style: TextStyle(fontWeight: FontWeight.w500),),
-            SizedBox(width: 2,),
-            Text(unit,style: TextStyle(fontSize: 10),),
-
-
+            Text(title,style: TextStyle(fontSize: 12),),
+            SizedBox(
+              width: 2,
+            ),
+            Text(
+              value.value.toString(),
+              style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),
+            ),
+            SizedBox(
+              width: 2,
+            ),
+            Text(
+              unit,
+              style: TextStyle(fontSize: 10),
+            ),
           ],
         ));
+  }
+
+  Widget timerWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text("Duration:"),
+        SizedBox(
+          width: 7,
+        ),
+        Obx(() => Text(
+            "${controller.bleData.ecgMinutes.value.toString()}:${controller.bleData.ecgSeconds.value.toString()}")),
+      ],
+    );
   }
 }
