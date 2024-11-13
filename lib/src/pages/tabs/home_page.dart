@@ -105,7 +105,6 @@ class _HomePageState extends State<HomePage> {
                             // connectivity.blueToothManager.stopScan();
                             connectivity.scanDes.value = "Connect";
                             connectivity.isScan.value = false;
-
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text('Device Disconnected'),
                               backgroundColor: Colors.red,
@@ -216,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                               height: 90,
                               child: Image.asset(
-                                  'assets/images/blood_pressure.png')),
+                                  'assets/images/blood_pressure.jpg')),
                           Text("Blood Pressure")
                         ],
                       ),
@@ -266,7 +265,7 @@ class _HomePageState extends State<HomePage> {
                                 height: 90,
                                 width: 90,
                                 child: Image.asset(
-                                    'assets/images/blood_oxygen.png')),
+                                    'assets/images/blood_oxygen.jpg')),
                             Text("Blood Oxygen")
                           ],
                         )),
@@ -374,83 +373,83 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            Obx(() => HealthItemWidget(
-                data: "${homeController.bleData.battery} ",
-                buttonTitle: "start Battery",
-                onPressed: () {
-                  homeController.checkAndMonitorBattery();
-
-                  // homeController.bleData.startBattery();
-                })),
-            Obx(() => HealthItemWidget(
-                data: "${homeController.bleData.temperature} ",
-                buttonTitle: "start Temperature",
-                onPressed: () {
-                  homeController.bleData.startTemperature();
-                })),
-            Obx(() => HealthItemWidget(
-                data:
-                    "spo2: ${homeController.bleData.bloodOxygen}  hr:${homeController.bleData.heartRate} ",
-                buttonTitle: "start Blood oxygen",
-                onPressed: () {
-                  homeController.bleData.startBloodOxygen();
-                })),
-            HealthItemWidget(
-                data: "",
-                buttonTitle: "stop Blood oxygen",
-                onPressed: () {
-                  homeController.bleData.stopBloodOxygen();
-                }),
-            HealthItemWidget(
-                data: "",
-                buttonTitle: "select Blood Glucose paper",
-                onPressed: () {
-                  // showPickerArray(context);
-                }),
-            Obx(() => HealthItemWidget(
-                data: "${homeController.bleData.bloodGlucose}  ",
-                buttonTitle: "start Blood Glucose",
-                onPressed: () {
-                  homeController.bleData.startBloodGlucose();
-                })),
-            HealthItemWidget(
-                data: "",
-                buttonTitle: "stop Blood Glucose",
-                onPressed: () {
-                  homeController.bleData.stopBloodGlucose();
-                }),
-            Obx(() => HealthItemWidget(
-                data: "${homeController.bleData.bloodPressure}",
-                buttonTitle: "start Blood Pressure",
-                onPressed: () {
-                  homeController.bleData.startBloodPressure();
-                })),
-            HealthItemWidget(
-                data: "",
-                buttonTitle: "stop Blood Pressure",
-                onPressed: () {
-                  homeController.bleData.stopBloodPressure();
-                }),
-            Container(
-              height: 200,
-              color: Colors.orange.withOpacity(0.1),
-              child: HrWave(
-                  waveData: homeController.bleData.hrWaveList,
-                  update: homeController.bleData.hrWaveUpdate,
-                  paintColor: 0xFFFF9000),
-            ),
-            Obx(() => HealthItemWidget(
-                data: "${homeController.bleData.outEcgValue} ",
-                buttonTitle: "start Ecg",
-                onPressed: () {
-                  homeController.bleData.startEcg();
-                })),
-            HealthItemWidget(
-                data: " ",
-                buttonTitle: "Stop Ecg",
-                onPressed: () {
-                  homeController.bleData.stopEcg();
-                }),
+            // Obx(() => HealthItemWidget(
+            //     data: "${homeController.bleData.battery} ",
+            //     buttonTitle: "start Battery",
+            //     onPressed: () {
+            //       homeController.checkAndMonitorBattery();
+            //
+            //       // homeController.bleData.startBattery();
+            //     })),
+            // Obx(() => HealthItemWidget(
+            //     data: "${homeController.bleData.temperature} ",
+            //     buttonTitle: "start Temperature",
+            //     onPressed: () {
+            //       homeController.bleData.startTemperature();
+            //     })),
+            // Obx(() => HealthItemWidget(
+            //     data:
+            //         "spo2: ${homeController.bleData.bloodOxygen}  hr:${homeController.bleData.heartRate} ",
+            //     buttonTitle: "start Blood oxygen",
+            //     onPressed: () {
+            //       homeController.bleData.startBloodOxygen();
+            //     })),
+            // HealthItemWidget(
+            //     data: "",
+            //     buttonTitle: "stop Blood oxygen",
+            //     onPressed: () {
+            //       homeController.bleData.stopBloodOxygen();
+            //     }),
+            // HealthItemWidget(
+            //     data: "",
+            //     buttonTitle: "select Blood Glucose paper",
+            //     onPressed: () {
+            //       // showPickerArray(context);
+            //     }),
+            // Obx(() => HealthItemWidget(
+            //     data: "${homeController.bleData.bloodGlucose}  ",
+            //     buttonTitle: "start Blood Glucose",
+            //     onPressed: () {
+            //       homeController.bleData.startBloodGlucose();
+            //     })),
+            // HealthItemWidget(
+            //     data: "",
+            //     buttonTitle: "stop Blood Glucose",
+            //     onPressed: () {
+            //       homeController.bleData.stopBloodGlucose();
+            //     }),
+            // Obx(() => HealthItemWidget(
+            //     data: "${homeController.bleData.bloodPressure}",
+            //     buttonTitle: "start Blood Pressure",
+            //     onPressed: () {
+            //       homeController.bleData.startBloodPressure();
+            //     })),
+            // HealthItemWidget(
+            //     data: "",
+            //     buttonTitle: "stop Blood Pressure",
+            //     onPressed: () {
+            //       homeController.bleData.stopBloodPressure();
+            //     }),
+            // Container(
+            //   height: 200,
+            //   color: Colors.orange.withOpacity(0.1),
+            //   child: HrWave(
+            //       waveData: homeController.bleData.hrWaveList,
+            //       update: homeController.bleData.hrWaveUpdate,
+            //       paintColor: 0xFFFF9000),
+            // ),
+            // Obx(() => HealthItemWidget(
+            //     data: "${homeController.bleData.outEcgValue} ",
+            //     buttonTitle: "start Ecg",
+            //     onPressed: () {
+            //       homeController.bleData.startEcg();
+            //     })),
+            // HealthItemWidget(
+            //     data: " ",
+            //     buttonTitle: "Stop Ecg",
+            //     onPressed: () {
+            //       homeController.bleData.stopEcg();
+            //     }),
             // EcgWave(homeController.bleData.waveData,
             //     homeController.bleData.ecgUpdate),
           ],

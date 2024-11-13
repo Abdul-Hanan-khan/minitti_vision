@@ -277,7 +277,7 @@ class EcgScreen extends StatelessWidget {
           width: 7,
         ),
         Obx(() => Text(
-            "${controller.bleData.ecgMinutes.value.toString()}:${controller.bleData.ecgSeconds.value.toString()}")),
+            controller.bleData.ecgSeconds.value.toString())),
       ],
     );
   }

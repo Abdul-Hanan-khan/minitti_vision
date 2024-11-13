@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:test_flutter/src/bluetooth/bluetooth_manager.dart';
 import 'package:test_flutter/src/common/constant.dart';
 import 'package:test_flutter/src/core/hc03_sdk.dart';
@@ -36,7 +37,7 @@ class BleData {
   var temperatureData = Rxn();
   var measuringEcg = false.obs;
   var ecgSeconds = 0.obs;  // Observable to track seconds
-  var ecgMinutes = 0.obs;
+  // var ecgMinutes = 0.obs;
    Timer? _ecgTimer;
 
 
@@ -291,14 +292,15 @@ class BleData {
 
   void clearEcgReadings(){
     mood.value = 0;
-    hrv.value = 0;
+    hr.value = 0;
     maxRR.value = 0;
     minRR.value = 0;
     hrv.value = 0;
     respiratoryRateV.value = 0;
-    ecgMinutes.value=0;
+    // ecgMinutes.value=0;
     ecgSeconds.value=0;
     waveData.clear();
+
 
 
   }
@@ -316,11 +318,13 @@ class BleData {
   }
 
   startTimerEcg(){
+    final NumberFormat formatter = NumberFormat('00');
     _ecgTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-      ecgSeconds++;
+     ecgSeconds.value =  int.parse(formatter.format(ecgSeconds.value+1));
       if (ecgSeconds.value >= 60) {
-        ecgMinutes++;
-        ecgSeconds.value = 0; // Reset seconds to 0 after a minute
+        stopEcg();
+        // ecgMinutes.value= int.parse(formatter.format(ecgMinutes.value+1));
+        // ecgSeconds.value = int.parse(formatter.format(0)); // Reset seconds to 0 after a minute
       }
     });
   }
